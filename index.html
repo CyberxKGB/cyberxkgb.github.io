@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>КГБ - Guardians of Bangla</title>
+    <style>
+        /* --- General Setup & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Roboto Condensed', sans-serif;
+            color: #f0f0f0;
+            height: 100%;
+            overflow: hidden; /* Prevent scrolling on login screen */
+        }
+
+        body {
+            background: linear-gradient(135deg, #020412, #0A192F);
+        }
+
+        /* --- Primary Login Screen --- */
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            transition: opacity 1s ease-out;
+            position: fixed;
+            width: 100%;
+            z-index: 2000;
+        }
+
+        .login-box {
+            background: rgba(10, 10, 10, 0.75);
+            padding: 40px 50px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1.5s ease-out;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            font-size: 3em;
+            color: #E5C100; /* Gold */
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .login-box p {
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .login-input::placeholder { color: #aaa; }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #B22222; /* Crimson Red */
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .login-button:hover {
+            background: #DC143C; /* Brighter Crimson */
+            transform: translateY(-2px);
+        }
+
+        .login-error {
+            color: #FF4747;
+            margin-top: 15px;
+            height: 20px;
+            font-weight: bold;
+        }
+
+        /* --- Admin Login Modal --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1500;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            position: relative;
+        }
+        
+        .modal-close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover { color: #fff; }
+
+        /* --- Main Content (Hidden Initially) --- */
+        #main-content {
+            display: none;
+            height: 100vh;
+            overflow-y: auto;
+            animation: fadeIn 2s ease-in;
+        }
+        
+        .content-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header { text-align: center; padding-bottom: 40px; }
+        header h1 { font-size: 2.5em; color: #fff; }
+
+        .card {
+            background: rgba(10, 15, 44, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 25px 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .card-home { text-align: center; }
+        .tagline { font-size: 1.8em; color: #E5C100; font-weight: bold; padding: 20px 0; }
+
+        /* --- Collapsible/Accordion Section --- */
+        .toggle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #B22222;
+        }
+        .toggle-header h2 { font-size: 2em; color: #E5C100; }
+        .toggle-icon { font-size: 2em; font-weight: bold; transition: transform 0.4s ease; }
+        .toggle-content { max-height: 0; overflow: hidden; transition: max-height 0.7s ease-out, padding-top 0.5s ease; padding-top: 0; }
+        .toggle-content.active { padding-top: 25px; }
+        .toggle-header.active .toggle-icon { transform: rotate(45deg); }
+        
+        /* Content, Team, and Form styles are the same */
+        .mission-content p, .mission-content li { font-size: 1.1em; line-height: 1.6; margin-bottom: 12px; }
+        .mission-content h3 { font-size: 1.5em; color: #f0f0f0; margin-top: 20px; margin-bottom: 10px; }
+        .team-structure { display: flex; flex-wrap: wrap; gap: 20px; }
+        .team-group { flex: 1 1 250px; background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 6px; }
+        .team-group h3 { font-size: 1.4em; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid; }
+        .team-group ul { list-style-type: none; }
+        .team-group li { margin-bottom: 8px; font-size: 1.05em; }
+        .blue h3 { border-color: #5DADE2; color: #5DADE2; }
+        .green h3 { border-color: #58D68D; color: #58D68D; }
+        .red h3 { border-color: #EC7063; color: #EC7063; }
+        .gray h3 { border-color: #BFC9CA; color: #BFC9CA; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px; color: #fff; }
+        .submit-btn { background-color: #58D68D; color: #000; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
+        .submit-btn:hover { background-color: #82E0AA; }
+        
+        /* --- Application & Admin Panel --- */
+        #admin-panel-locked { text-align: center; }
+        #admin-panel-content { display: none; }
+        .application-item { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #5DADE2; }
+        .application-item[data-status="Accepted"] { border-left-color: #58D68D; }
+        .application-item[data-status="Denied"] { border-left-color: #EC7063; }
+        .application-item h4 { margin-bottom: 5px; }
+        .application-item p { margin-bottom: 10px; white-space: pre-wrap; }
+        .admin-actions button { margin-right: 10px; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-accept { background: #58D68D; color: #000; }
+        .btn-deny { background: #EC7063; color: #000; }
+        
+        /* Join/Footer */
+        #join { text-align: center; }
+        #join p { margin-bottom: 20px; font-size: 1.2em; }
+        #join-button { text-decoration: none; background: #E5C100; color: #000; padding: 14px 40px; border-radius: 6px; font-weight: bold; font-size: 1.1em; transition: background-color 0.3s ease, transform 0.2s ease; display: inline-block; }
+        #join-button:hover { background: #FFDE40; transform: translateY(-2px); }
+        footer { text-align: center; padding: 40px 20px 20px 20px; color: #888; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .login-box { width: 90%; padding: 30px 20px; } .content-wrapper { padding: 20px 15px; } .toggle-header h2 { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <div class="login-box">
+            <h1>КГБ</h1>
+            <p>Authorized Personnel Only</p>
+            <input type="text" id="username" class="login-input" placeholder="Username">
+            <input type="password" id="password" class="login-input" placeholder="Password">
+            <button class="login-button" onclick="handleLogin()">ACCESS</button>
+            <p id="login-error" class="login-error"></p>
+        </div>
+    </div>
+
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content">
+            <div class="login-box">
+                <span class="modal-close-btn" onclick="closeAdminLoginModal()">&times;</span>
+                <h1>Admin Access</h1>
+                <p>Enter Command Credentials</p>
+                <input type="text" id="admin-username" class="login-input" placeholder="Admin Username">
+                <input type="password" id="admin-password" class="login-input" placeholder="Admin Password">
+                <button class="login-button" onclick="handleAdminLogin()">Authenticate</button>
+                <p id="admin-login-error" class="login-error"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <main id="main-content">
+        <div class="content-wrapper">
+            <header>
+                <h1 id="welcome-message"></h1>
+            </header>
+
+            <section class="card card-home">
+                <p class="tagline">Built with honor, inspired by legacy, defended with pride.</p>
+            </section>
+            
+            <section class="card">
+                <div class="toggle-header" onclick="toggleAccordion(this)">
+                    <h2>What We Do</h2>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="toggle-content mission-content">
+                    <h3>K.G.B. - The Knowledgable Guardians of Bangla! 🤝</h3>
+                    <p>We are a dedicated group committed to keeping the Bangla community on HelloTalk safe, respectful, and welcoming...</p>
+                    <h3>কে.জি.বি. - বাংলা কমিউনিটির জ্ঞানসম্পন্ন অভিভাবক! 🤝</h3>
+                    <p>আমরা HelloTalk-এর বাংলা কমিউনিটিকে নিরাপদ, সম্মানজনক এবং সৌহার্দ্যপূর্ণ রাখতে প্রতিশ্রুতিবদ্ধ একটি দল...</p>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="toggle-header" onclick="toggleAccordion(this)">
+                    <h2>Honourable Members</h2>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="toggle-content">
+                    <div class="team-structure">
+                        <div class="team-group blue"><h3>HEAD OF COMMANDS</h3><ul><li>Taher Mohon</li><li>Md Obaidul</li><li>Imran Masum</li></ul></div>
+                        <div class="team-group green"><h3>COMMUNICATION OPERATIVES</h3><ul><li>Joy Gentleman - Head of Com.</li><li>Hasan Ahmed</li><li>Rafidh</li><li>Nehal</li><li>Ariyan Star</li><li>Simon</li><li>Zarin Ali</li><li>Mehjabin Diya</li></ul></div>
+                        <div class="team-group red"><h3>CYBER EXPERTS</h3><ul><li>Nil Blackout - Chief of Tech</li><li>Rayhan - Tech Lead</li><li>Rizwan - Acc Specialist</li></ul></div>
+                        <div class="team-group gray"><h3>INTELLIGENCE ANALYST</h3><ul><li>Life Jibon - Team Leader</li><li>Mahadi Hassan</li><li>Dinasor</li><li>Tajim</li><li>Mehu Binte</li><li>Ayat Islam</li><li>Sharu Kobita</li><li>Tanjina Perle</li><li>Samiya</li></ul></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="card">
+                 <div class="toggle-header" onclick="toggleAccordion(this)">
+                    <h2>Recruitment Application</h2>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="toggle-content">
+                    <form id="application-form" onsubmit="submitApplication(event)">
+                        <div class="form-group"><label for="appName">Your Name:</label><input type="text" id="appName" required></div>
+                        <div class="form-group"><label for="appReason">Why do you want to join КГБ?</label><textarea id="appReason" rows="4" required></textarea></div>
+                        <button type="submit" class="submit-btn">Submit Application</button>
+                        <p id="app-success-msg" style="color: #58D68D; margin-top: 10px;"></p>
+                    </form>
+                </div>
+            </section>
+
+            <section class="card">
+                <div id="admin-panel-locked">
+                    <div class="toggle-header">
+                        <h2>Application Command Center</h2>
+                    </div>
+                    <p style="text-align: center; padding-top: 20px;">This area is restricted. Command access required.</p>
+                    <div style="text-align: center; padding-top: 20px;">
+                        <button class="submit-btn" onclick="showAdminLoginModal()">Access Command Center</button>
+                    </div>
+                </div>
+                <div id="admin-panel-content">
+                    <h2>Received Applications</h2>
+                    <div id="application-list"></div>
+                </div>
+            </section>
+
+            <section id="join" class="card">
+                <h2>Join Our Force</h2>
+                <p>Ready to enlist? Join our Telegram unit while your application is reviewed.</p>
+                <a href="https://t.me/+2m_kXAqHPL41NDU1" id="join-button" target="_blank">Join КГБ on Telegram</a>
+            </section>
+
+            <footer>
+                <p>© 2025 КГБ. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // --- TIER 1: PRIMARY LOGIN ---
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('login-error');
+            
+            if (user === 'KGB' && pass === 'COMRADE') {
+                const loginContainer = document.getElementById('login-container');
+                loginContainer.style.opacity = '0';
+                setTimeout(() => {
+                    loginContainer.style.display = 'none';
+                    document.body.style.overflowY = 'auto';
+                    document.getElementById('main-content').style.display = 'block';
+                    document.getElementById('welcome-message').innerHTML = 'Welcome, Comrade 🤝';
+                }, 1000);
+            } else {
+                errorMsg.textContent = 'ACCESS DENIED. Incorrect Credentials.';
+                const loginBox = document.querySelector('#login-container .login-box');
+                loginBox.style.animation = 'shake 0.5s';
+                setTimeout(() => { loginBox.style.animation = ''; }, 500);
+            }
+        }
+        document.getElementById('password').addEventListener('keypress', (e) => e.key === 'Enter' && handleLogin());
+
+        // --- TIER 2: ADMIN LOGIN MODAL ---
+        const adminModal = document.getElementById('admin-login-modal');
+        function showAdminLoginModal() { adminModal.style.display = 'flex'; }
+        function closeAdminLoginModal() { adminModal.style.display = 'none'; }
+        
+        function handleAdminLogin() {
+            const user = document.getElementById('admin-username').value;
+            const pass = document.getElementById('admin-password').value;
+            const errorMsg = document.getElementById('admin-login-error');
+
+            if (user === 'SUPREMEKGB' && pass === 'SUPREMEKGB') {
+                closeAdminLoginModal();
+                document.getElementById('admin-panel-locked').style.display = 'none';
+                document.getElementById('admin-panel-content').style.display = 'block';
+                renderApplications();
+            } else {
+                errorMsg.textContent = "Authentication Failed.";
+                const loginBox = document.querySelector('#admin-login-modal .login-box');
+                loginBox.style.animation = 'shake 0.5s';
+                setTimeout(() => { loginBox.style.animation = ''; errorMsg.textContent = ""; }, 1000);
+            }
+        }
+        document.getElementById('admin-password').addEventListener('keypress', (e) => e.key === 'Enter' && handleAdminLogin());
+
+
+        // --- ACCORDION ---
+        function toggleAccordion(element) {
+            const content = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                content.classList.remove('active');
+            } else {
+                content.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + "px";
+            } 
+        }
+
+        // --- APPLICATION & ADMIN PANEL LOGIC (uses browser's localStorage) ---
+        function submitApplication(event) {
+            event.preventDefault();
+            const application = {
+                id: Date.now(),
+                name: document.getElementById('appName').value,
+                reason: document.getElementById('appReason').value,
+                status: 'Pending',
+                comments: ''
+            };
+            let applications = JSON.parse(localStorage.getItem('kgbApplications')) || [];
+            applications.push(application);
+            localStorage.setItem('kgbApplications', JSON.stringify(applications));
+            
+            const successMsg = document.getElementById('app-success-msg');
+            successMsg.textContent = "Application submitted successfully.";
+            document.getElementById('application-form').reset();
+            setTimeout(() => { successMsg.textContent = ""; }, 5000);
+        }
+
+        function renderApplications() {
+            const appListDiv = document.getElementById('application-list');
+            let applications = JSON.parse(localStorage.getItem('kgbApplications')) || [];
+            
+            if (applications.length === 0) {
+                appListDiv.innerHTML = "<p>No applications received yet.</p>";
+                return;
+            }
+            appListDiv.innerHTML = ''; // Clear list before rendering
+            applications.forEach(app => {
+                const appDiv = document.createElement('div');
+                appDiv.className = 'application-item';
+                appDiv.setAttribute('data-status', app.status);
+                appDiv.innerHTML = `
+                    <h4>Applicant: ${app.name} (Status: ${app.status})</h4>
+                    <p><b>Reason:</b> ${app.reason}</p>
+                    <div class="form-group">
+                        <label for="comment-${app.id}">Admin Comments:</label>
+                        <textarea id="comment-${app.id}" rows="2" onchange="saveComment(${app.id})">${app.comments}</textarea>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn-accept" onclick="updateStatus(${app.id}, 'Accepted')">Accept</button>
+                        <button class="btn-deny" onclick="updateStatus(${app.id}, 'Denied')">Deny</button>
+                    </div>
+                `;
+                appListDiv.appendChild(appDiv);
+            });
+        }
+        
+        function updateStatus(id, newStatus) {
+            let applications = JSON.parse(localStorage.getItem('kgbApplications'));
+            const
