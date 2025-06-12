@@ -16,7 +16,7 @@
     overflow: hidden;
     background: linear-gradient(135deg, #020412, #0A192F);
   }
-  #login-container, #members-login-modal, #admin-login-modal, #members-modal {
+  #login-container, #members-login-modal, #members-modal {
     display: none;
     position: fixed; left: 0; top: 0;
     width: 100%; height: 100%;
@@ -26,7 +26,7 @@
     justify-content: center;
     z-index: 2000;
   }
-  #login-container.active, #members-login-modal.active, #admin-login-modal.active, #members-modal.active {
+  #login-container.active, #members-login-modal.active, #members-modal.active {
     display: flex;
   }
   .login-box, .modal-content {
@@ -203,122 +203,11 @@
   .green h3 { border-color: #58D68D; color: #58D68D; }
   .red h3 { border-color: #EC7063; color: #EC7063; }
   .gray h3 { border-color: #BFC9CA; color: #BFC9CA; }
-  .form-group { margin-bottom: 15px; }
-  .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-  .form-group input, .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
-    color: #fff;
-  }
-  .submit-btn {
-    background-color: #58D68D;
-    color: #000;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  .submit-btn:hover {
-    background-color: #82E0AA;
-  }
-  #admin-panel-locked {
-    text-align: center;
-  }
-  #admin-panel-content {
-    display: none;
-  }
-  .application-item {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    border-left: 4px solid #5DADE2;
-  }
-  .application-item[data-status="Accepted"] {
-    border-left-color: #58D68D;
-  }
-  .application-item[data-status="Denied"] {
-    border-left-color: #EC7063;
-  }
-  .application-item h4 {
-    margin-bottom: 5px;
-  }
-  .application-item p {
-    margin-bottom: 10px;
-    white-space: pre-wrap;
-  }
-  .admin-actions button {
-    margin-right: 10px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .btn-accept {
-    background: #58D68D;
-    color: #000;
-  }
-  .btn-deny {
-    background: #EC7063;
-    color: #000;
-  }
-  #join {
-    text-align: center;
-  }
-  #join p {
-    margin-bottom: 20px;
-    font-size: 1.2em;
-  }
-  #join-button {
-    text-decoration: none;
-    background: #E5C100;
-    color: #000;
-    padding: 14px 40px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: inline-block;
-  }
-  #join-button:hover {
-    background: #FFDE40;
-    transform: translateY(-2px);
-  }
-  footer {
-    text-align: center;
-    padding: 40px 20px 20px 20px;
-    color: #888;
-  }
-  @keyframes fadeIn {
-    from {
-      opacity: 0; transform: translateY(20px);
-    }
-    to {
-      opacity: 1; transform: translateY(0);
-    }
-  }
+  @keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
   @keyframes shake {
-    0% {
-      transform: translateX(0);
-    }
-    25% {
-      transform: translateX(-5px);
-    }
-    50% {
-      transform: translateX(5px);
-    }
-    75% {
-      transform: translateX(-5px);
-    }
-    100% {
-      transform: translateX(0);
-    }
+    0%, 100% {transform: translateX(0);}
+    25%, 75% {transform: translateX(-5px);}
+    50% {transform: translateX(5px);}
   }
 </style>
 </head>
@@ -346,18 +235,6 @@
   </div>
 </div>
 
-<div id="admin-login-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
-  <div class="modal-content">
-    <button class="modal-close-btn" onclick="closeAdminLoginModal()" aria-label="Close admin login">&times;</button>
-    <h1 id="admin-login-title">Admin Access</h1>
-    <p>Enter Command Credentials</p>
-    <input type="text" id="admin-username" class="login-input" placeholder="Username" aria-label="Admin Username" autocomplete="off"/>
-    <input type="password" id="admin-password" class="login-input" placeholder="Password" aria-label="Admin Password" autocomplete="off"/>
-    <button class="login-button" onclick="handleAdminLogin()">Authenticate</button>
-    <p id="admin-login-error" class="login-error" role="alert" aria-live="assertive"></p>
-  </div>
-</div>
-
 <div id="members-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="members-list-title" tabindex="-1">
   <div class="modal-content">
     <button class="modal-close-btn" onclick="closeMembersModal()" aria-label="Close members list">&times;</button>
@@ -382,69 +259,45 @@
 <main id="main-content" tabindex="0" style="display:none;">
   <div class="content-wrapper">
     <header><h1 id="welcome-message"></h1></header>
-    <section class="card card-home"><p class="tagline">Built with honor, inspired by legacy, defended with pride.</p></section>
+
+    <section class="card card-home">
+      <p class="tagline">Built with honor, inspired by legacy, defended with pride.</p>
+    </section>
+
     <section class="card">
       <div class="toggle-header" onclick="toggleAccordion(this)" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') toggleAccordion(this);">
-        <h2>What We Do</h2><span class="toggle-icon">+</span>
+        <h2>History of КГБ</h2><span class="toggle-icon">+</span>
       </div>
-      <div class="toggle-content mission-content" aria-hidden="true">
-        <h3>K.G.B. - The Knowledgable Guardians of Bangla! 🤝</h3>
-        <p>We are a dedicated group committed to keeping the Bangla community on HelloTalk safe, respectful, and welcoming. Our mission is to protect our members and foster a positive environment for learning.</p>
-        <ul>
-          <li>🛡️ <b>Protect Members:</b> We identify and report scammers, harassers, and fake profiles.</li>
-          <li>🧭 <b>Guide Newcomers:</b> We welcome newcomers and help them find genuine language partners.</li>
-          <li>💬 <b>Promote Quality Exchange:</b> We encourage meaningful conversations and discourage disrespectful behavior.</li>
-          <li>🤝 <b>Offer Support:</b> If you face any problems or feel unsafe, we are here to help you.</li>
-        </ul>
-        <h3>কে.জি.বি. - বাংলা কমিউনিটির জ্ঞানসম্পন্ন অভিভাবক! 🤝</h3>
-        <p>আমরা HelloTalk-এর বাংলা কমিউনিটিকে নিরাপদ, সম্মানজনক এবং সৌহার্দ্যপূর্ণ রাখতে প্রতিশ্রুতিবদ্ধ একটি দল। আমাদের লক্ষ্য হলো সকল সদস্যদের সুরক্ষা দেওয়া এবং শেখার জন্য একটি ইতিবাচক পরিবেশ তৈরি করা।</p>
-        <ul>
-          <li>🛡️ <b>সদস্যদের সুরক্ষা:</b> আমরা স্ক্যামার, হয়রানিকারী এবং নকল প্রোফাইল শনাক্ত করে রিপোর্ট করি।</li>
-          <li>🧭 <b>নতুনদের পথপ্রদর্শন:</b> আমরা নতুনদের সঠিক পথ দেখাই এবং আসল ভাষা সঙ্গী খুঁজে পেতে সহায়তা করি।</li>
-          <li>💬 <b>সঠিক ভাব বিনিময়:</b> আমরা অর্থপূর্ণ আলোচনাকে উৎসাহিত করি এবং অসম্মানজনক আচরণকে নিরুৎসাহিত করি।</li>
-          <li>🤝 <b>সহায়তা প্রদান:</b> আপনি কোনো সমস্যার সম্মুখীন হলে বা অপমানিত বোধ করলে, আমরা আপনাকে সাহায্য করার জন্য আছি।</li>
-        </ul>
+      <div class="toggle-content" aria-hidden="true">
+        <p>КГБ, the Knowledgable Guardians of Bangla, have a proud tradition of protecting the Bangla community on HelloTalk by fostering safety, respect, and positive language exchange. They guard against scammers and offenders, guide newcomers, and offer unwavering support to their members.</p>
       </div>
     </section>
+
+    <section class="card">
+      <div class="toggle-header" onclick="toggleAccordion(this)" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') toggleAccordion(this);">
+        <h2>Why КГБ Inspires Us</h2><span class="toggle-icon">+</span>
+      </div>
+      <div class="toggle-content" aria-hidden="true">
+        <p>КГБ inspires us through their dedication to community safety, integrity, and support. Their leadership promotes a culture of trust, responsibility, and respect within the Bangla language learning community.</p>
+      </div>
+    </section>
+
     <section class="card">
       <button class="submit-btn" onclick="openMembersLoginModal()">View Honourable Members (Login Required)</button>
     </section>
-    <section class="card">
-      <div class="toggle-header" onclick="toggleAccordion(this)" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') toggleAccordion(this);">
-        <h2>Recruitment Application</h2><span class="toggle-icon">+</span>
-      </div>
-      <div class="toggle-content" aria-hidden="true">
-        <form id="application-form" onsubmit="submitApplication(event)">
-          <div class="form-group"><label for="appName">Your Name:</label><input type="text" id="appName" required></div>
-          <div class="form-group"><label for="appReason">Why do you want to join КГБ?</label><textarea id="appReason" rows="4" required></textarea></div>
-          <button type="submit" class="submit-btn">Submit Application</button>
-          <p id="app-success-msg" style="color: #58D68D; margin-top: 10px;"></p>
-        </form>
-      </div>
-    </section>
-    <section class="card">
-      <div id="admin-panel-locked">
-        <div class="toggle-header"><h2>Application Command Center</h2></div>
-        <p style="text-align: center; padding-top: 20px;">This area is restricted. Command access required.</p>
-        <div style="text-align: center; padding-top: 20px;">
-          <button class="submit-btn" onclick="showAdminLoginModal()">Access Command Center (Login Required)</button>
-        </div>
-      </div>
-      <div id="admin-panel-content" aria-live="polite" tabindex="0">
-        <h2>Received Applications</h2>
-        <div id="application-list"></div>
-      </div>
-    </section>
+
     <section id="join" class="card">
       <h2>Join Our Force</h2>
       <p>Ready to enlist? Join our Telegram unit while your application is reviewed.</p>
       <a href="https://t.me/+iH02qvjKiW5jNTc9" id="join-button" target="_blank" rel="noopener noreferrer">Join КГБ on Telegram</a>
     </section>
+
     <footer><p>© 2025 КГБ. All rights reserved.</p></footer>
   </div>
 </main>
 
 <script>
+  // Main site login (username KGB / password KGB)
   function handleLogin() {
     const user = document.getElementById('username').value.trim().toUpperCase();
     const pass = document.getElementById('password').value.trim().toUpperCase();
@@ -456,20 +309,17 @@
       errorMsg.textContent = 'ACCESS DENIED. Incorrect Credentials.';
       const loginBox = document.querySelector('#login-container .login-box');
       loginBox.style.animation = 'shake 0.5s';
-      setTimeout(() => { loginBox.style.animation = ''; }, 500);
+      setTimeout(() => loginBox.style.animation = '', 500);
     }
   }
   function proceedToMain(message) {
-    const loginContainer = document.getElementById('login-container');
-    loginContainer.style.opacity = '0';
-    setTimeout(() => {
-      loginContainer.style.display = 'none';
-      document.body.style.overflowY = 'auto';
-      document.getElementById('main-content').style.display = 'block';
-      document.getElementById('welcome-message').textContent = message;
-    }, 600);
+    document.getElementById('login-container').classList.remove('active');
+    document.getElementById('main-content').style.display = 'block';
+    document.body.style.overflowY = 'auto';
+    document.getElementById('welcome-message').textContent = message;
   }
 
+  // Members login modal (username ULTIMATEKGB / password ULTIMATEKGB)
   const membersLoginModal = document.getElementById('members-login-modal');
   function openMembersLoginModal() {
     membersLoginModal.classList.add('active');
@@ -496,56 +346,24 @@
       errorMsg.textContent = 'Authentication Failed.';
       const loginBox = membersLoginModal.querySelector('.login-box');
       loginBox.style.animation = 'shake 0.5s';
-      setTimeout(() => { loginBox.style.animation = ''; errorMsg.textContent = ''; }, 1000);
+      setTimeout(() => {
+        loginBox.style.animation = '';
+        errorMsg.textContent = '';
+      }, 1000);
     }
   }
-
+  const membersModal = document.getElementById('members-modal');
   function openMembersModal() {
-    const membersModal = document.getElementById('members-modal');
     membersModal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
   function closeMembersModal() {
-    const membersModal = document.getElementById('members-modal');
     membersModal.classList.remove('active');
     document.body.style.overflow = '';
   }
-  document.getElementById('members-modal').addEventListener('click', e => {
-    if (e.target.id === 'members-modal') closeMembersModal();
+  membersModal.addEventListener('click', e => {
+    if (e.target === membersModal) closeMembersModal();
   });
-
-  const adminModal = document.getElementById('admin-login-modal');
-  function showAdminLoginModal() {
-    adminModal.classList.add('active');
-    clearAdminLogin();
-  }
-  function closeAdminLoginModal() {
-    adminModal.classList.remove('active');
-    clearAdminLogin();
-  }
-  function clearAdminLogin() {
-    document.getElementById('admin-username').value = '';
-    document.getElementById('admin-password').value = '';
-    document.getElementById('admin-login-error').textContent = '';
-  }
-  function handleAdminLogin() {
-    const user = document.getElementById('admin-username').value.trim().toUpperCase();
-    const pass = document.getElementById('admin-password').value.trim().toUpperCase();
-    const errorMsg = document.getElementById('admin-login-error');
-    if (user === 'SUPREMEKGB' && pass === 'SUPREMEKGB') {
-      errorMsg.textContent = '';
-      closeAdminLoginModal();
-      document.getElementById('admin-panel-locked').style.display = 'none';
-      document.getElementById('admin-panel-content').style.display = 'block';
-      renderApplications();
-    } else {
-      errorMsg.textContent = 'Authentication Failed.';
-      const loginBox = adminModal.querySelector('.login-box');
-      loginBox.style.animation = 'shake 0.5s';
-      setTimeout(() => { loginBox.style.animation = ''; errorMsg.textContent = ''; }, 1000);
-    }
-  }
-
 
   function toggleAccordion(elem) {
     const content = elem.nextElementSibling;
@@ -553,4 +371,20 @@
     if (content.style.maxHeight) {
       content.style.maxHeight = null;
       content.classList.remove('active');
-      con
+      content.setAttribute('aria-hidden', 'true');
+    } else {
+      content.classList.add('active');
+      content.style.maxHeight = content.scrollHeight + 'px';
+      content.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  // Enter key triggers
+  document.getElementById('username').addEventListener('keypress', e => { if(e.key === 'Enter'){ e.preventDefault(); handleLogin(); } });
+  document.getElementById('password').addEventListener('keypress', e => { if(e.key === 'Enter'){ e.preventDefault(); handleLogin(); } });
+  document.getElementById('members-username').addEventListener('keypress', e => { if(e.key === 'Enter'){ e.preventDefault(); handleMembersLogin(); } });
+  document.getElementById('members-password').addEventListener('keypress', e => { if(e.key === 'Enter'){ e.preventDefault(); handleMembersLogin(); } });
+</script>
+</body>
+  </html>
+  
